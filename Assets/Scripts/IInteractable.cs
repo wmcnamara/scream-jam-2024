@@ -4,7 +4,7 @@ using UnityEngine;
 
 public struct InteractData
 {
-    PlayerMovement interactingPlayer;
+    public Player interactingPlayer;
 }
 
 public interface IInteractable

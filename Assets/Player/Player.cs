@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 7;
     [SerializeField] private GameObject playerBody;
@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerHUD hudPrefab;
 
     private CharacterController characterController;
-  //  private PlayerInputActions playerActions;
+    private PlayerInputActions playerActions;
     private PlayerHUD playerHUD;
 
     private float xRot;
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-    //    playerActions = new PlayerInputActions();
+        playerActions = new PlayerInputActions();
 
         //Spawn the HUD
         Canvas canvas = FindObjectOfType<Canvas>();
@@ -39,24 +39,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnEnable()
     {
-       // playerActions.Enable();
+        playerActions.Enable();
         ConnectInputEvents();
     }
 
     private void OnDisable()
     {
-        //playerActions.Disable();
+        playerActions.Disable();
         DisconnectInputEvents();
     }
 
     private void ConnectInputEvents()
     {
-       // playerActions.PlayerMovement.Interact.performed += OnInteractPressed;
+       playerActions.PlayerMovement.Interact.performed += OnInteractPressed;
     }
 
     private void DisconnectInputEvents()
     {
-    //    playerActions.PlayerMovement.Interact.performed -= OnInteractPressed;
+        playerActions.PlayerMovement.Interact.performed -= OnInteractPressed;
     }
 
     private void Update()
@@ -78,9 +78,10 @@ public class PlayerMovement : MonoBehaviour
         {
             if(hitData.transform.TryGetComponent(out IInteractable interactable))
             {
-            //    InteractData interactData;
+                InteractData interactData;
+                interactData.interactingPlayer = this;
 
-               // interactable.Interact(interactData);
+                interactable.Interact(interactData);
                 return;
             }
 
@@ -108,25 +109,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-  //      Vector2 movementInput = playerActions.PlayerMovement.Movement.ReadValue<Vector2>();
+        Vector2 movementInput = playerActions.PlayerMovement.Movement.ReadValue<Vector2>();
 
-     //   Vector3 movement = new Vector3(movementInput.x, 0.0f, movementInput.y) * movementSpeed * Time.deltaTime;
+        float gravityDisplacement = Physics.gravity.y;
 
-    //    movement = transform.TransformVector(movement);
+        Vector3 movement = new Vector3(movementInput.x, gravityDisplacement, movementInput.y) * movementSpeed * Time.deltaTime;
 
-   //     characterController.Move(movement);
+        movement = transform.TransformVector(movement);
+
+        characterController.Move(movement);
     }
 
     private void HandleLooking()
     {
-    //    Vector2 lookInput = playerActions.PlayerMovement.Look.ReadValue<Vector2>();
+        Vector2 lookInput = playerActions.PlayerMovement.Look.ReadValue<Vector2>();
 
-    //    Vector2 look = lookInput * sensitivity * 0.1f;
-   //     xRot -= look.y;
-    //    xRot = Mathf.Clamp(xRot, -90.0f, 90.0f);
+        Vector2 look = lookInput * sensitivity * 0.1f;
+        xRot -= look.y;
+        xRot = Mathf.Clamp(xRot, -90.0f, 90.0f);
 
-     //   transform.Rotate(Vector3.up * look.x);
+        transform.Rotate(Vector3.up * look.x);
 
-     //   playerCamera.transform.localRotation = Quaternion.Euler(xRot, 0.0f, 0.0f);
+        playerCamera.transform.localRotation = Quaternion.Euler(xRot, 0.0f, 0.0f);
     }
 }
