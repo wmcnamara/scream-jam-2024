@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 7;
@@ -12,13 +13,16 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask interactLayer;
     [SerializeField] private Color defaultCrosshairColor = Color.white;
     [SerializeField] private Color hoveringOnInteractableCrosshairColor = Color.green;
-    [SerializeField] private Transform pickupPos;
+    [SerializeField] private Light flashlight;
+    [SerializeField] private AudioClip flashlightToggleSfx;
 
     [SerializeField] private PlayerHUD hudPrefab;
 
     private CharacterController characterController;
     private PlayerInputActions playerActions;
     private PlayerHUD playerHUD;
+    
+    private AudioSource playerAudioSource;
 
     private float xRot;
 
@@ -26,6 +30,7 @@ public class Player : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         playerActions = new PlayerInputActions();
+        playerAudioSource = GetComponent<AudioSource>();
 
         //Spawn the HUD
         Canvas canvas = FindObjectOfType<Canvas>();
@@ -52,11 +57,13 @@ public class Player : MonoBehaviour
     private void ConnectInputEvents()
     {
        playerActions.PlayerMovement.Interact.performed += OnInteractPressed;
+       playerActions.PlayerMovement.ToggleFlashlight.performed += OnFlashlightToggle;
     }
 
     private void DisconnectInputEvents()
     {
         playerActions.PlayerMovement.Interact.performed -= OnInteractPressed;
+        playerActions.PlayerMovement.ToggleFlashlight.performed += OnFlashlightToggle;
     }
 
     private void Update()
@@ -87,6 +94,13 @@ public class Player : MonoBehaviour
 
             Debug.Log("Object is not interactable: " + hitData.transform.name);
         }
+    }
+
+
+    private void OnFlashlightToggle(InputAction.CallbackContext context)
+    {
+        flashlight.enabled = !flashlight.enabled;
+        playerAudioSource.PlayOneShot(flashlightToggleSfx);
     }
 
     private bool PerformInteractionRaycast(out RaycastHit hit)
