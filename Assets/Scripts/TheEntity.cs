@@ -98,12 +98,20 @@ public class TheEntity : MonoBehaviour
         }
     }
 
-    // Reset the scene if the player touches the entity
-    void OnTriggerEnter(Collider other)
+    // Handle the entity's collision with the door
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) // Ensure the player GameObject has the tag "Player"
         {
             ResetScene();
+        }
+        else if (other.CompareTag("Door")) // Ensure the door GameObject has the tag "Door"
+        {
+            Door door = other.GetComponent<Door>(); // Get the Door component
+            if (door != null)
+            {
+                door.ToggleDoor(); // Toggle the door state
+            }
         }
     }
 
