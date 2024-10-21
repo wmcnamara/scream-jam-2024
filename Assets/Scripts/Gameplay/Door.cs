@@ -44,14 +44,7 @@ public class Door : MonoBehaviour, IInteractable
         IsOpen = !IsOpen;
         progress = 0.0f;
 
-        if (IsOpen)
-        {
-            doorSource.PlayOneShot(doorOpenSfx); 
-        }
-        else
-        {
-            doorSource.PlayOneShot(doorCloseSfx);
-        }
+        doorSource.PlayOneShot(IsOpen ? doorOpenSfx : doorCloseSfx);
     }
 
     public bool CanBeInteractedWith()

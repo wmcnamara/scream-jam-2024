@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement; // Make sure to include this namespace
 
 public class TheEntity : MonoBehaviour
 {
@@ -9,9 +10,9 @@ public class TheEntity : MonoBehaviour
 
     private NavMeshAgent agent;
 
-    [SerializeField] private float chaseDistance = 5f; // Distance at which Granny starts chasing
+    [SerializeField] private float chaseDistance = 5f; // Distance at which the entity starts chasing
     [SerializeField] private float wanderRadius = 10f; // Radius for random wandering
-    [SerializeField] private float loseChaseDistance = 10f; // Distance at which Granny loses sight of the player
+    [SerializeField] private float loseChaseDistance = 10f; // Distance at which the entity loses sight of the player
     private Transform player;
 
     [SerializeField] private AudioClip footstepSfx;
@@ -48,7 +49,7 @@ public class TheEntity : MonoBehaviour
         currentWaypointIndex = Random.Range(0, waypoints.Length);
         agent.destination = waypoints[currentWaypointIndex].position;
 
-        // Optionally, add random wandering behavior
+        // Random wandering behavior
         if (Random.value > 0.7f)
         {
             Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
@@ -62,7 +63,6 @@ public class TheEntity : MonoBehaviour
 
         PlayFootstepAudio();
     }
-
 
     void CheckForPlayer()
     {
@@ -88,14 +88,28 @@ public class TheEntity : MonoBehaviour
         }
     }
 
-
     void ChasePlayer()
     {
         agent.destination = player.position;
+
         if (!audioSource.isPlaying)
         {
             PlayChaseAudio();
         }
+    }
+
+    // Reset the scene if the player touches the entity
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player")) // Ensure the player GameObject has the tag "Player"
+        {
+            ResetScene();
+        }
+    }
+
+    void ResetScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
     }
 
     void PlayFootstepAudio()
