@@ -41,21 +41,18 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(InteractData interactData)
     {
-        IsOpen = !IsOpen;
-        progress = 0.0f;
-
-        if (IsOpen)
-        {
-            doorSource.PlayOneShot(doorOpenSfx); 
-        }
-        else
-        {
-            doorSource.PlayOneShot(doorCloseSfx);
-        }
+        ToggleDoor();
     }
 
     public bool CanBeInteractedWith()
     {
         return true;
+    }
+
+    public void ToggleDoor()
+    {
+        IsOpen = !IsOpen;
+        progress = 0.0f;
+        doorSource.PlayOneShot(IsOpen ? doorOpenSfx : doorCloseSfx);
     }
 }
