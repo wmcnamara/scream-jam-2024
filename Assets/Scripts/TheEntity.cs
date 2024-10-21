@@ -44,9 +44,11 @@ public class TheEntity : MonoBehaviour
 
     void GoToNextWaypoint()
     {
-        currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+        // Pick a random waypoint index
+        currentWaypointIndex = Random.Range(0, waypoints.Length);
         agent.destination = waypoints[currentWaypointIndex].position;
 
+        // Optionally, add random wandering behavior
         if (Random.value > 0.7f)
         {
             Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
@@ -54,12 +56,13 @@ public class TheEntity : MonoBehaviour
             NavMeshHit hit;
             if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, 1))
             {
-                agent.SetDestination(hit.position);
+                agent.SetDestination(hit.position); // Move to a random point nearby
             }
         }
 
         PlayFootstepAudio();
     }
+
 
     void CheckForPlayer()
     {
