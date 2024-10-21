@@ -26,6 +26,14 @@ public class Player : MonoBehaviour
 
     private float xRot;
 
+    // Head bobbing settings 
+    [SerializeField] private float bobAmount = 0.1f; 
+    [SerializeField] private float bobSpeed = 5f; 
+    [SerializeField] private float returnSpeed = 5f; // Speed of smooth transition back to original position
+    private Vector3 cameraInitialPosition;
+    private Vector3 cameraTargetPosition;
+    private float bobTimer = 0f;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -40,6 +48,10 @@ public class Player : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Set initial camera position for head bobbing
+        cameraInitialPosition = playerCamera.transform.localPosition;
+        cameraTargetPosition = cameraInitialPosition;
     }
 
     private void OnEnable()
@@ -132,6 +144,22 @@ public class Player : MonoBehaviour
         movement = transform.TransformVector(movement);
 
         characterController.Move(movement);
+
+        // Head bobbing logic 
+        if (movementInput.x != 0 || movementInput.y != 0) // If moving
+        {
+            bobTimer += Time.deltaTime * bobSpeed;
+            float bobOffset = Mathf.Sin(bobTimer) * bobAmount;
+            cameraTargetPosition = cameraInitialPosition + new Vector3(0, bobOffset, 0);
+        }
+        else
+        {
+            bobTimer = 0f; // Reset the timer when not moving
+            cameraTargetPosition = cameraInitialPosition; // Smoothly transition to the original position
+        }
+
+        // Smoothly move the camera to the target position
+        playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraTargetPosition, Time.deltaTime * returnSpeed);
     }
 
     private void HandleLooking()
