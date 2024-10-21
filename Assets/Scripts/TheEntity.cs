@@ -98,19 +98,25 @@ public class TheEntity : MonoBehaviour
         }
     }
 
-    // Handle the entity's collision with the door
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // Ensure the player GameObject has the tag "Player"
+        if (other.CompareTag("Player"))
         {
             ResetScene();
         }
-        else if (other.CompareTag("Door")) // Ensure the door GameObject has the tag "Door"
+        else if (other.CompareTag("Door"))
         {
-            Door door = other.GetComponent<Door>(); // Get the Door component
+            Debug.Log("Entity collided with the door"); // Debug log for collision detection
+
+            Door door = other.GetComponent<Door>();
             if (door != null)
             {
-                door.ToggleDoor(); // Toggle the door state
+                door.ToggleDoor(); // Open the door when the entity hits it
+                Debug.Log("Door toggled by entity");
+            }
+            else
+            {
+                Debug.Log("No Door component found on object");
             }
         }
     }

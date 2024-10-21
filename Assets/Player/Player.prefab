@@ -386,7 +386,6 @@ GameObject:
   - component: {fileID: 6589304087186787871}
   - component: {fileID: 7664964555175986998}
   - component: {fileID: 7335899299704907546}
-  - component: {fileID: 7648987778696482578}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -436,6 +435,9 @@ MonoBehaviour:
   flashlight: {fileID: 5319890124961243427}
   flashlightToggleSfx: {fileID: 0}
   hudPrefab: {fileID: 4197101312295124149, guid: 6875f4388b9b9364686589211f4e451f, type: 3}
+  bobAmount: 0.1
+  bobSpeed: 5
+  returnSpeed: 5
 --- !u!143 &7664964555175986998
 CharacterController:
   m_ObjectHideFlags: 0
@@ -558,18 +560,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7648987778696482578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6901231766450056021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fdb5a96b28da384f840b3e743329977, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8558450347745127798
 GameObject:
   m_ObjectHideFlags: 0
