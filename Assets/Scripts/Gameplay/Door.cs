@@ -54,6 +54,5 @@ public class Door : MonoBehaviour, IInteractable
         IsOpen = !IsOpen;
         progress = 0.0f;
         doorSource.PlayOneShot(IsOpen ? doorOpenSfx : doorCloseSfx);
-        Debug.Log("Door toggled: " + (IsOpen ? "Opened" : "Closed"));
     }
 }
