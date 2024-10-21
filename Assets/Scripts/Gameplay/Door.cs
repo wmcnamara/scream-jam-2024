@@ -11,6 +11,7 @@ public class Door : MonoBehaviour, IInteractable
     public float OpenSpeed = 0.5f;
 
     [SerializeField] private AudioClip doorOpenSfx;
+    [SerializeField] private AudioClip doorCloseSfx;
     [SerializeField] private bool switchOpenDirection;
 
     private Vector3 doorOpenRot;
@@ -42,7 +43,15 @@ public class Door : MonoBehaviour, IInteractable
     {
         IsOpen = !IsOpen;
         progress = 0.0f;
-        doorSource.PlayOneShot(doorOpenSfx);
+
+        if (IsOpen)
+        {
+            doorSource.PlayOneShot(doorOpenSfx); 
+        }
+        else
+        {
+            doorSource.PlayOneShot(doorCloseSfx);
+        }
     }
 
     public bool CanBeInteractedWith()
