@@ -101,14 +101,11 @@ public class TheEntity : MonoBehaviour
         if (isChasing && (horizontalDistance > loseChaseDistance || verticalDistance >= 1.0f))
         {
             isChasing = false;
+            StartCoroutine(FadeOutChaseAudio(1f));
             agent.speed = normalSpeed; // Return to normal speed when not chasing
             GoToNextWaypoint();
         }
     }
-
-
-
-
 
     IEnumerator StartChaseSequence()
     {
@@ -136,7 +133,10 @@ public class TheEntity : MonoBehaviour
 
         agent.isStopped = false; // Resume movement
         agent.speed = chaseSpeed; // Increase the chase speed
-        PlayChaseAudio();
+
+        ResetChaseAudio();  // Ensure the chase audio settings are reset
+        PlayChaseAudio();   // Play the chase audio
+
         isPausing = false;
     }
 
@@ -172,9 +172,28 @@ public class TheEntity : MonoBehaviour
             {
                 chaseAudioSource.clip = chaseSfx;
                 chaseAudioSource.loop = true;
-                chaseAudioSource.Play();
             }
+            chaseAudioSource.Play();
         }
+    }
+
+    void ResetChaseAudio()
+    {
+        chaseAudioSource.volume = 1f; // Reset the volume to full before the chase starts
+    }
+
+    IEnumerator FadeOutChaseAudio(float fadeDuration)
+    {
+        float startVolume = chaseAudioSource.volume;
+
+        while (chaseAudioSource.volume > 0)
+        {
+            chaseAudioSource.volume -= startVolume * Time.deltaTime / fadeDuration;
+            yield return null;
+        }
+
+        chaseAudioSource.Stop(); // Stop the chase music after fading out
+        chaseAudioSource.volume = startVolume; // Reset volume for next time
     }
 
     private void OnTriggerEnter(Collider other)
