@@ -21,7 +21,11 @@ public class Player : MonoBehaviour
     private CharacterController characterController;
     private PlayerInputActions playerActions;
     private PlayerHUD playerHUD;
-    
+
+    public Inventory Inventory { get { return playerInventory; } }
+
+    private Inventory playerInventory;
+
     private AudioSource playerAudioSource;
 
     private float xRot;
@@ -39,6 +43,7 @@ public class Player : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         playerActions = new PlayerInputActions();
         playerAudioSource = GetComponent<AudioSource>();
+        playerInventory = GetComponent<Inventory>();
 
         //Spawn the HUD
         Canvas canvas = FindObjectOfType<Canvas>();

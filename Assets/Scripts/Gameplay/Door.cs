@@ -12,13 +12,17 @@ public class Door : MonoBehaviour, IInteractable
 
     [SerializeField] private AudioClip doorOpenSfx;
     [SerializeField] private AudioClip doorCloseSfx;
+    [SerializeField] private AudioClip doorUnlockSfx;
+    [SerializeField] private AudioClip doorLockedInteractSfx;
     [SerializeField] private bool switchOpenDirection;
+    [SerializeField] private KeyType keyType;
 
     private Vector3 doorOpenRot;
     private Vector3 doorClosedRot;
     private AudioSource doorSource;
     private float progress;
 
+    
     public void Start()
     {
         doorSource = GetComponent<AudioSource>();
@@ -41,7 +45,28 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(InteractData interactData)
     {
-        ToggleDoor();
+        if (keyType == KeyType.UNLOCKED)
+        {
+            ToggleDoor();
+        }
+        else
+        {
+            if (interactData.interactingPlayer.Inventory.HasKey(keyType))
+            {
+                doorSource.PlayOneShot(doorUnlockSfx);
+                UnlockDoor();
+            }
+            else
+            {
+                doorSource.PlayOneShot(doorLockedInteractSfx);
+                return;
+            }
+        }
+    }
+    
+    private void UnlockDoor()
+    {
+        keyType = KeyType.UNLOCKED;
     }
 
     public bool CanBeInteractedWith()
