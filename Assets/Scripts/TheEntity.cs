@@ -75,10 +75,18 @@ public class TheEntity : MonoBehaviour
         // Draw the ray in the scene view for debugging
         Debug.DrawRay(transform.position, directionToPlayer * chaseDistance, Color.red);
 
-        // Proximity-based chase (full distance + vertical constraint)
+        // Proximity-based chase (using raycast to ensure no walls between entity and player)
         if (distanceToPlayer <= proximityChaseDistance && verticalDistanceToPlayer <= 2.5f && !isChasing)
         {
-            StartChase();
+            RaycastHit hit;
+            // Check if there's a line of sight to the player
+            if (Physics.Raycast(transform.position, directionToPlayer, out hit, proximityChaseDistance))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    StartChase();
+                }
+            }
         }
         // Vision-based chase using line of sight and full distance, but add a vertical constraint
         else if (Vector3.Dot(transform.forward, directionToPlayer) > 0 && distanceToPlayer < chaseDistance && verticalDistanceToPlayer <= 2.5f)
@@ -99,6 +107,7 @@ public class TheEntity : MonoBehaviour
             StopChase();
         }
     }
+
 
 
 
