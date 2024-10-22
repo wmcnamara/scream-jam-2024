@@ -23,6 +23,7 @@ public class TheEntity : MonoBehaviour
     private AudioSource chaseAudioSource;
     private bool isChasing = false;
     private bool isPausing = false;
+    private bool lastChase = false;
     private Transform player;
     private Animator runningCrawlAnimator;
 
@@ -66,6 +67,8 @@ public class TheEntity : MonoBehaviour
         PlayFootstepAudio();
     }
 
+
+
     void CheckForPlayer()
     {
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
@@ -102,14 +105,11 @@ public class TheEntity : MonoBehaviour
         }
 
         // Stop chase if player escapes (again, use full 3D distance + vertical check)
-        if (isChasing && (distanceToPlayer > loseChaseDistance || verticalDistanceToPlayer > 2.5f))
+        if (isChasing && (distanceToPlayer > loseChaseDistance || verticalDistanceToPlayer > 2.5f) && lastChase == false)
         {
             StopChase();
         }
     }
-
-
-
 
     void StartChase()
     {
@@ -130,6 +130,24 @@ public class TheEntity : MonoBehaviour
         GoToNextWaypoint();
     }
 
+    public void StopEntity() //final cutscene
+    {
+        // Stop chasing the player
+        StopChase();
+
+        // Set the agent speed to 0
+        agent.speed = 0f;
+
+        // Stop any running animation
+        if (runningCrawlAnimator != null)
+        {
+            runningCrawlAnimator.SetFloat("Speed", 0); // Assuming you use a parameter called "Speed" in your Animator
+            runningCrawlAnimator.SetBool("IsMoving", false); // Assuming you have a boolean parameter for movement
+        }
+
+        Debug.Log("Entity has been stopped.");
+    }
+
     IEnumerator StartChaseSequence()
     {
         isPausing = true;
@@ -145,16 +163,34 @@ public class TheEntity : MonoBehaviour
             audioSource.PlayOneShot(screamSfx);
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f); // Pause for dramatic effect
 
         if (runningCrawlAnimator != null)
         {
             runningCrawlAnimator.enabled = true;
-            runningCrawlAnimator.speed = originalAnimatorSpeed * 3f;
+
+            // Increase animation speed based on chase type
+            if (lastChase)
+            {
+                runningCrawlAnimator.speed = originalAnimatorSpeed * 5f; // Faster animation for last chase
+            }
+            else
+            {
+                runningCrawlAnimator.speed = originalAnimatorSpeed * 3f; // Standard chase speed
+            }
         }
 
         agent.isStopped = false;
-        agent.speed = chaseSpeed;
+
+        // Increase movement speed based on chase type
+        if (lastChase)
+        {
+            agent.speed = chaseSpeed * 2f; // Faster speed for last chase
+        }
+        else
+        {
+            agent.speed = chaseSpeed; // Standard chase speed
+        }
 
         ResetChaseAudio();
         PlayChaseAudio();
@@ -237,5 +273,14 @@ public class TheEntity : MonoBehaviour
     void OpenDeathScene()
     {
         SceneManager.LoadScene("Death");
+    }
+
+    public void ForceChasePlayer()
+    {
+        if (!isChasing) // Only start chase if not already chasing
+        {
+            lastChase = true;
+            StartChase();
+        }
     }
 }
