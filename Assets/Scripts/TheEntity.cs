@@ -11,13 +11,15 @@ public class TheEntity : MonoBehaviour
     private NavMeshAgent agent;
 
     [SerializeField] private float chaseDistance = 5f;
+    [SerializeField] private float proximityChaseDistance = 1f; // Distance for proximity chase
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float loseChaseDistance = 10f;
     [SerializeField] private float chaseSpeed = 3f; // Increased chase speed
     [SerializeField] private float normalSpeed = 1f; // Normal wandering speed
     [SerializeField] private AudioClip footstepSfx;
     [SerializeField] private AudioClip chaseSfx;
-    [SerializeField] private AudioClip screamSfx; 
+    [SerializeField] private AudioClip screamSfx;
+    [SerializeField] private bool enableProximityChase = false; // Toggle for proximity chase in inspector
 
     private AudioSource audioSource; // Main audio source for footsteps and scream
     private AudioSource chaseAudioSource; // Audio source for chase music
@@ -79,7 +81,14 @@ public class TheEntity : MonoBehaviour
         // Draw the ray in the scene view for debugging
         Debug.DrawRay(transform.position, directionToPlayer * chaseDistance, Color.red);
 
-        if (Vector3.Dot(transform.forward, directionToPlayer) > 0)
+        // Chase player based on proximity if enabled
+        if (enableProximityChase && horizontalDistance <= proximityChaseDistance && !isChasing)
+        {
+            isChasing = true;
+            StartCoroutine(StartChaseSequence());
+        }
+        // Normal chase logic based on vision cone
+        else if (Vector3.Dot(transform.forward, directionToPlayer) > 0)
         {
             if (horizontalDistance < chaseDistance && verticalDistance < 1.0f)
             {
