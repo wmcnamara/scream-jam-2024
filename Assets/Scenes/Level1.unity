@@ -16139,7 +16139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2685531281584940249, guid: f4f06d7c88a76434792faacaee47d8b2, type: 3}
       propertyPath: keyType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2946817541376056883, guid: f4f06d7c88a76434792faacaee47d8b2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -27186,6 +27186,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 3c927afbff70feb44850fcac4f26f8a3, type: 2}
+    - target: {fileID: 8165570490364753140, guid: 83ff481c843785e44b7dca8a67c8bb81, type: 3}
+      propertyPath: screamSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: 23a35081766ced74cb573f361826312a, type: 3}
     - target: {fileID: 8165570490364753140, guid: 83ff481c843785e44b7dca8a67c8bb81, type: 3}
       propertyPath: chaseDistance
       value: 6
