@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3106922684117474573}
   - component: {fileID: 374200300763668291}
   m_Layer: 0
-  m_Name: KEY1
+  m_Name: KEY4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744104ccec718e04ea81555e5c369475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyType: 1
+  keyType: 4
   onKeyCollectedSfx: {fileID: 8300000, guid: 74f3315b037e3f24aaf8847083b673b8, type: 3}
 --- !u!82 &3106922684117474573
 AudioSource:
@@ -227,7 +227,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 35261150e5398c0439d6fd7481f62b62, type: 2}
+  - {fileID: 2100000, guid: e03c61940200c9b428ea54b9134ba0a7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
