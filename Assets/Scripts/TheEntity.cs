@@ -11,32 +11,37 @@ public class TheEntity : MonoBehaviour
     private NavMeshAgent agent;
 
     [SerializeField] private float chaseDistance = 5f;
-    [SerializeField] private float proximityChaseDistance = 1f; // Distance for proximity chase
-    [SerializeField] private float wanderRadius = 10f;
+    [SerializeField] private float proximityChaseDistance = 2f; // Horizontal proximity for chase activation
     [SerializeField] private float loseChaseDistance = 10f;
-    [SerializeField] private float chaseSpeed = 3f; // Increased chase speed
-    [SerializeField] private float normalSpeed = 1f; // Normal wandering speed
+    [SerializeField] private float chaseSpeed = 3f;
+    [SerializeField] private float normalSpeed = 1f;
     [SerializeField] private AudioClip footstepSfx;
     [SerializeField] private AudioClip chaseSfx;
     [SerializeField] private AudioClip screamSfx;
-    [SerializeField] private bool enableProximityChase = false; // Toggle for proximity chase in inspector
 
-    private AudioSource audioSource; // Main audio source for footsteps and scream
-    private AudioSource chaseAudioSource; // Audio source for chase music
+    private AudioSource audioSource;
+    private AudioSource chaseAudioSource;
     private bool isChasing = false;
     private bool isPausing = false;
     private Transform player;
     private Animator runningCrawlAnimator;
 
+    private float originalAnimatorSpeed = 1f;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
-        chaseAudioSource = transform.Find("ChaseAudioSource").GetComponent<AudioSource>(); // Find the child audio source
+        chaseAudioSource = transform.Find("ChaseAudioSource").GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         runningCrawlAnimator = transform.Find("Running Crawl").GetComponent<Animator>();
-        agent.speed = normalSpeed; // Set the initial speed to normal
+        agent.speed = normalSpeed;
         GoToNextWaypoint();
+
+        if (runningCrawlAnimator != null)
+        {
+            originalAnimatorSpeed = runningCrawlAnimator.speed;
+        }
     }
 
     void Update()
@@ -58,93 +63,92 @@ public class TheEntity : MonoBehaviour
         currentWaypointIndex = Random.Range(0, waypoints.Length);
         agent.destination = waypoints[currentWaypointIndex].position;
 
-        if (Random.value > 0.7f)
-        {
-            Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
-            randomDirection += transform.position;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, 1))
-            {
-                agent.SetDestination(hit.position);
-            }
-        }
-
         PlayFootstepAudio();
     }
 
     void CheckForPlayer()
     {
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        float horizontalDistance = Vector3.Distance(transform.position, player.position);
-        float verticalDistance = Mathf.Abs(player.position.y - transform.position.y);
+        float distanceToPlayer = Vector3.Distance(player.position, transform.position); // Full 3D distance
+        float verticalDistanceToPlayer = Mathf.Abs(player.position.y - transform.position.y); // Vertical distance only
 
         // Draw the ray in the scene view for debugging
         Debug.DrawRay(transform.position, directionToPlayer * chaseDistance, Color.red);
 
-        // Chase player based on proximity if enabled
-        if (enableProximityChase && horizontalDistance <= proximityChaseDistance && !isChasing)
+        // Proximity-based chase (full distance + vertical constraint)
+        if (distanceToPlayer <= proximityChaseDistance && verticalDistanceToPlayer <= 3.0f && !isChasing)
         {
-            isChasing = true;
-            StartCoroutine(StartChaseSequence());
+            StartChase();
         }
-        // Normal chase logic based on vision cone
-        else if (Vector3.Dot(transform.forward, directionToPlayer) > 0)
+        // Vision-based chase using line of sight and full distance, but add a vertical constraint
+        else if (Vector3.Dot(transform.forward, directionToPlayer) > 0 && distanceToPlayer < chaseDistance && verticalDistanceToPlayer <= 3.0f)
         {
-            if (horizontalDistance < chaseDistance && verticalDistance < 1.0f)
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, directionToPlayer, out hit, chaseDistance))
             {
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, directionToPlayer, out hit, chaseDistance))
+                if (hit.collider.CompareTag("Player") && !isChasing)
                 {
-                    if (hit.collider.CompareTag("Player"))
-                    {
-                        if (!isChasing)
-                        {
-                            isChasing = true;
-                            StartCoroutine(StartChaseSequence());
-                        }
-                    }
+                    StartChase();
                 }
             }
         }
 
-        if (isChasing && (horizontalDistance > loseChaseDistance || verticalDistance >= 1.0f))
+        // Stop chase if player escapes (again, use full 3D distance + vertical check)
+        if (isChasing && (distanceToPlayer > loseChaseDistance || verticalDistanceToPlayer > 3.0f))
         {
-            isChasing = false;
-            StartCoroutine(FadeOutChaseAudio(1f));
-            agent.speed = normalSpeed; // Return to normal speed when not chasing
-            GoToNextWaypoint();
+            StopChase();
         }
+    }
+
+
+
+    void StartChase()
+    {
+        isChasing = true;
+        StartCoroutine(StartChaseSequence());
+    }
+
+    void StopChase()
+    {
+        isChasing = false;
+        StartCoroutine(FadeOutChaseAudio(1f));
+        agent.speed = normalSpeed;
+
+        if (runningCrawlAnimator != null)
+        {
+            runningCrawlAnimator.speed = originalAnimatorSpeed;
+        }
+        GoToNextWaypoint();
     }
 
     IEnumerator StartChaseSequence()
     {
         isPausing = true;
-        agent.isStopped = true; // Pause the entity's movement
+        agent.isStopped = true;
 
-        // Stop the animation
         if (runningCrawlAnimator != null)
         {
-            runningCrawlAnimator.enabled = false; // Disable the animator
+            runningCrawlAnimator.enabled = false;
         }
 
         if (screamSfx != null)
         {
-            audioSource.PlayOneShot(screamSfx); // Play scream audio at full volume
+            audioSource.PlayOneShot(screamSfx);
         }
 
-        yield return new WaitForSeconds(1f); // Pause for 1 second
+        yield return new WaitForSeconds(1f);
 
-        // Resume the animation
         if (runningCrawlAnimator != null)
         {
-            runningCrawlAnimator.enabled = true; // Re-enable the animator
+            runningCrawlAnimator.enabled = true;
+            runningCrawlAnimator.speed = originalAnimatorSpeed * 3f;
         }
 
-        agent.isStopped = false; // Resume movement
-        agent.speed = chaseSpeed; // Increase the chase speed
+        agent.isStopped = false;
+        agent.speed = chaseSpeed;
 
-        ResetChaseAudio();  // Ensure the chase audio settings are reset
-        PlayChaseAudio();   // Play the chase audio
+        ResetChaseAudio();
+        PlayChaseAudio();
 
         isPausing = false;
     }
@@ -188,7 +192,7 @@ public class TheEntity : MonoBehaviour
 
     void ResetChaseAudio()
     {
-        chaseAudioSource.volume = 1f; // Reset the volume to full before the chase starts
+        chaseAudioSource.volume = 1f;
     }
 
     IEnumerator FadeOutChaseAudio(float fadeDuration)
@@ -201,8 +205,8 @@ public class TheEntity : MonoBehaviour
             yield return null;
         }
 
-        chaseAudioSource.Stop(); // Stop the chase music after fading out
-        chaseAudioSource.volume = startVolume; // Reset volume for next time
+        chaseAudioSource.Stop();
+        chaseAudioSource.volume = startVolume;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -216,7 +220,7 @@ public class TheEntity : MonoBehaviour
             Door door = other.GetComponent<Door>();
             if (door != null)
             {
-                door.ToggleDoor();
+                door.ToggleDoor(); // Interact with the door
             }
         }
     }
