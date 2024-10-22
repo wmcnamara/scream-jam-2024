@@ -12,4 +12,9 @@ public class MenuGUIFunctionHelper : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void OpenCredits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
 }
