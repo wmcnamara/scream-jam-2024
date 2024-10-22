@@ -5,12 +5,17 @@ public class MenuGUIFunctionHelper : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("Level1");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void OpenMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void OpenCredits()
