@@ -17,12 +17,14 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private bool switchOpenDirection;
     [SerializeField] private KeyType keyType;
 
+    // New variable to determine if the door is permanently locked
+    [SerializeField] private bool isPermanentlyLocked = false;
+
     private Vector3 doorOpenRot;
     private Vector3 doorClosedRot;
     private AudioSource doorSource;
     private float progress;
 
-    
     public void Start()
     {
         doorSource = GetComponent<AudioSource>();
@@ -45,6 +47,13 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(InteractData interactData)
     {
+        // Check if the door is permanently locked
+        if (isPermanentlyLocked)
+        {
+            doorSource.PlayOneShot(doorLockedInteractSfx);
+            return;
+        }
+
         if (keyType == KeyType.UNLOCKED)
         {
             ToggleDoor();
@@ -63,7 +72,7 @@ public class Door : MonoBehaviour, IInteractable
             }
         }
     }
-    
+
     private void UnlockDoor()
     {
         keyType = KeyType.UNLOCKED;

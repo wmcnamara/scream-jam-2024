@@ -137,14 +137,6 @@ public class TheEntity : MonoBehaviour
 
         // Set the agent speed to 0
         agent.speed = 0f;
-
-        // Stop any running animation
-        if (runningCrawlAnimator != null)
-        {
-            runningCrawlAnimator.SetFloat("Speed", 0); // Assuming you use a parameter called "Speed" in your Animator
-            runningCrawlAnimator.SetBool("IsMoving", false); // Assuming you have a boolean parameter for movement
-        }
-
         Debug.Log("Entity has been stopped.");
     }
 

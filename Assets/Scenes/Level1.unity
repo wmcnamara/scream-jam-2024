@@ -2641,6 +2641,31 @@ PrefabInstance:
       addedObject: {fileID: 885995724}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 290d5c01ef7f584438bbaca69591c2b9, type: 3}
+--- !u!1 &239687870 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2328606700512384663, guid: 220a95f3865594946a0e536e0898c30d, type: 3}
+  m_PrefabInstance: {fileID: 4800499107119160013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &239687876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239687870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd3d8fad4783ae40b8eb2454ed5ed05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OpenSpeed: 0.5
+  doorOpenSfx: {fileID: 0}
+  doorCloseSfx: {fileID: 0}
+  doorUnlockSfx: {fileID: 0}
+  doorLockedInteractSfx: {fileID: 8300000, guid: 6f51a022ffbe47e4d910b1af366fa89b, type: 3}
+  switchOpenDirection: 0
+  keyType: 0
+  isPermanentlyLocked: 1
 --- !u!4 &239955727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8025051699818823092, guid: 1eba6e825e1b0ba4db1d042de5c08e44, type: 3}
@@ -7933,12 +7958,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OpenSpeed: 0.5
-  doorOpenSfx: {fileID: 0}
-  doorCloseSfx: {fileID: 0}
+  doorOpenSfx: {fileID: 8300000, guid: 9c4502cedfe5e0c418547bea7c940939, type: 3}
+  doorCloseSfx: {fileID: 8300000, guid: c29482f26bc9e184294de2a8e22c7dcc, type: 3}
   doorUnlockSfx: {fileID: 0}
-  doorLockedInteractSfx: {fileID: 0}
-  switchOpenDirection: 1
+  doorLockedInteractSfx: {fileID: 8300000, guid: 6f51a022ffbe47e4d910b1af366fa89b, type: 3}
+  switchOpenDirection: 0
   keyType: 1
+  isPermanentlyLocked: 0
 --- !u!1001 &654564223
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28166,6 +28192,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6363887485464442376, guid: 220a95f3865594946a0e536e0898c30d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 648697141}
+    - targetCorrespondingSourceObject: {fileID: 2328606700512384663, guid: 220a95f3865594946a0e536e0898c30d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 239687876}
   m_SourcePrefab: {fileID: 100100000, guid: 220a95f3865594946a0e536e0898c30d, type: 3}
 --- !u!1 &4911041561897846966
 GameObject:
@@ -28307,6 +28336,7 @@ MonoBehaviour:
   doorLockedInteractSfx: {fileID: 0}
   switchOpenDirection: 0
   keyType: 0
+  isPermanentlyLocked: 0
 --- !u!82 &5943038955715472872
 AudioSource:
   m_ObjectHideFlags: 0
@@ -28637,6 +28667,7 @@ MonoBehaviour:
   doorLockedInteractSfx: {fileID: 0}
   switchOpenDirection: 0
   keyType: 0
+  isPermanentlyLocked: 0
 --- !u!82 &6752399075064274154
 AudioSource:
   m_ObjectHideFlags: 0
@@ -29025,6 +29056,7 @@ MonoBehaviour:
   doorLockedInteractSfx: {fileID: 0}
   switchOpenDirection: 0
   keyType: 0
+  isPermanentlyLocked: 0
 --- !u!82 &7529387107194318685
 AudioSource:
   m_ObjectHideFlags: 0
