@@ -200,7 +200,7 @@ public class TheEntity : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ResetScene();
+            OpenDeathScene();
         }
         else if (other.CompareTag("Door"))
         {
@@ -212,8 +212,8 @@ public class TheEntity : MonoBehaviour
         }
     }
 
-    void ResetScene()
+    void OpenDeathScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene("Death");
     }
 }
