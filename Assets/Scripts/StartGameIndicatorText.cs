@@ -8,7 +8,7 @@ public class StartGameIndicatorText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<TextMeshProUGUI>().text = "Find all 3 keys to escape!!!";
+        GetComponent<TextMeshProUGUI>().text = "Find all 5 keys to escape!!!";
         Destroy(gameObject, 4.0f);
     }
 }

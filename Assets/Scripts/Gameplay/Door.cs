@@ -17,8 +17,8 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip doorLockedInteractSfx;
     [SerializeField] private bool switchOpenDirection;
     [SerializeField] private KeyType keyType;
-    [SerializeField] private bool requires3Keys = false;
-    [SerializeField] private GameObject[] threeLocks;
+    [SerializeField] private bool requires5Keys = false;
+    [SerializeField] private GameObject[] fiveLocks;  // Now handles 5 locks
 
     // New variable to determine if the door is permanently locked
     [SerializeField] private bool isPermanentlyLocked = false;
@@ -63,20 +63,21 @@ public class Door : MonoBehaviour, IInteractable
         }
         else
         {
-            if (requires3Keys)
+            if (requires5Keys)
             {
                 bool hasAllKeys = true;
 
-                for (int i = (int)KeyType.LOCKED_KEY1; i <= (int)KeyType.LOCKED_KEY3; i++)
+                // Loop through 5 keys instead of 3
+                for (int i = (int)KeyType.LOCKED_KEY1; i <= (int)KeyType.LOCKED_KEY5; i++)
                 {
                     if (!interactData.interactingPlayer.Inventory.HasKey((KeyType)i))
                     {
                         hasAllKeys = false;
                     }
-                    else 
+                    else
                     {
                         doorSource.PlayOneShot(lockBreakSfx, 0.5f);
-                        Destroy(threeLocks[i - 1]);
+                        Destroy(fiveLocks[i - 1]);  // Adjusted for 5 locks
                     }
                 }
 

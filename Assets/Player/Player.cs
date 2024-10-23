@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
 
         playerHUD.Crosshair.color = crosshairColor;
 
-        playerHUD.KeyIndicator.text = $"Keys: ({playerInventory.Keys.Count}/3)";
+        playerHUD.KeyIndicator.text = $"Keys: ({playerInventory.Keys.Count}/5)";
     }
 
     private void OnInteractPressed(InputAction.CallbackContext context) 

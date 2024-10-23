@@ -9,6 +9,7 @@ public enum KeyType
     LOCKED_KEY2,
     LOCKED_KEY3,
     LOCKED_KEY4,
+    LOCKED_KEY5,
 }
 
 //Actual monobehaviour prop class for the key
