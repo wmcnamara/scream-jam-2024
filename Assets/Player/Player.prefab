@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4187968447330704372}
   - component: {fileID: 8093205465801428768}
   - component: {fileID: 2031541354473552656}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2656907034402135493}
   - component: {fileID: 5319890124961243427}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Flashlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 7664964555175986998}
   - component: {fileID: 7335899299704907546}
   - component: {fileID: 6945632600812494110}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -586,7 +586,7 @@ GameObject:
   - component: {fileID: 7792578647362166610}
   - component: {fileID: 964852221625339874}
   - component: {fileID: 49796294128704636}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ForwardIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

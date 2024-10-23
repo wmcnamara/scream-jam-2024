@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -16,6 +17,8 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip doorLockedInteractSfx;
     [SerializeField] private bool switchOpenDirection;
     [SerializeField] private KeyType keyType;
+    [SerializeField] private bool requires3Keys = false;
+    [SerializeField] private GameObject[] threeLocks;
 
     // New variable to determine if the door is permanently locked
     [SerializeField] private bool isPermanentlyLocked = false;
@@ -60,21 +63,45 @@ public class Door : MonoBehaviour, IInteractable
         }
         else
         {
-            if (interactData.interactingPlayer.Inventory.HasKey(keyType))
+            if (requires3Keys)
             {
-                doorSource.PlayOneShot(doorUnlockSfx);
-                UnlockDoor();
+                bool hasAllKeys = true;
+
+                for (int i = (int)KeyType.LOCKED_KEY1; i <= (int)KeyType.LOCKED_KEY3; i++)
+                {
+                    if (!interactData.interactingPlayer.Inventory.HasKey((KeyType)i))
+                    {
+                        hasAllKeys = false;
+                    }
+                    else 
+                    {
+                        Destroy(threeLocks[i - 1]);
+                    }
+                }
+
+                if (hasAllKeys)
+                {
+                    UnlockDoor();
+                }
             }
             else
             {
-                doorSource.PlayOneShot(doorLockedInteractSfx);
-                return;
+                if (interactData.interactingPlayer.Inventory.HasKey(keyType))
+                {
+                    UnlockDoor();
+                }
+                else
+                {
+                    doorSource.PlayOneShot(doorLockedInteractSfx);
+                    return;
+                }
             }
         }
     }
 
     private void UnlockDoor()
     {
+        doorSource.PlayOneShot(doorUnlockSfx);
         keyType = KeyType.UNLOCKED;
     }
 
