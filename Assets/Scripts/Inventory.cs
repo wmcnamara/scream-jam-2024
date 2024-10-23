@@ -6,6 +6,8 @@ public class Inventory : MonoBehaviour
 {
     private List<KeyType> keys = new List<KeyType>();
 
+    public List<KeyType> Keys { get { return keys; } }
+
     public void AddKey(KeyType key)
     {
         keys.Add(key);

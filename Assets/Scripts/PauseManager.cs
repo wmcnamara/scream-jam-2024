@@ -13,7 +13,6 @@ public class PauseManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Assert(localInstance == null);
         localInstance = this;
         menuPrefab.SetActive(false);
     }

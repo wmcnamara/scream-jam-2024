@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private PlayerHUD hudPrefab;
 
+    public bool IsFlashlightOn { get { return flashlight.enabled; } }
+
     private CharacterController characterController;
     private PlayerInputActions playerActions;
     private PlayerHUD playerHUD;
@@ -99,6 +101,8 @@ public class Player : MonoBehaviour
         crosshairColor.a = 1f;
 
         playerHUD.Crosshair.color = crosshairColor;
+
+        playerHUD.KeyIndicator.text = $"Keys: ({playerInventory.Keys.Count}/3)";
     }
 
     private void OnInteractPressed(InputAction.CallbackContext context) 
@@ -109,11 +113,14 @@ public class Player : MonoBehaviour
         {
             if(hitData.transform.TryGetComponent(out IInteractable interactable))
             {
-                InteractData interactData;
-                interactData.interactingPlayer = this;
+                if (interactable.CanBeInteractedWith())
+                {
+                    InteractData interactData;
+                    interactData.interactingPlayer = this;
 
-                interactable.Interact(interactData);
-                return;
+                    interactable.Interact(interactData);
+                    return;
+                }
             }
 
             Debug.Log("Object is not interactable: " + hitData.transform.name);

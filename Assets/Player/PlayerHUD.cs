@@ -6,7 +6,13 @@ using UnityEngine.UI;
 
 public class PlayerHUD : MonoBehaviour
 {
-    [SerializeField] Image crosshair;
+    [SerializeField] private Image crosshair;
+    [SerializeField] private TextMeshProUGUI keyIndicator;
+
+    public TextMeshProUGUI KeyIndicator 
+    {
+        get { return keyIndicator; }
+    }
 
     public Image Crosshair
     {
