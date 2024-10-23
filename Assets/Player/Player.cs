@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private PlayerHUD hudPrefab;
 
+    public bool IsFlashlightOn { get { return flashlight.enabled; } }
+
     private CharacterController characterController;
     private PlayerInputActions playerActions;
     private PlayerHUD playerHUD;
