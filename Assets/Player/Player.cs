@@ -75,16 +75,23 @@ public class Player : MonoBehaviour
     {
        playerActions.PlayerMovement.Interact.performed += OnInteractPressed;
        playerActions.PlayerMovement.ToggleFlashlight.performed += OnFlashlightToggle;
+       playerActions.UI.PauseGame.performed += PauseGame;
     }
 
     private void DisconnectInputEvents()
     {
         playerActions.PlayerMovement.Interact.performed -= OnInteractPressed;
         playerActions.PlayerMovement.ToggleFlashlight.performed += OnFlashlightToggle;
+        playerActions.UI.PauseGame.performed -= PauseGame;
     }
 
     private void Update()
     {
+        if (PauseManager.Instance.IsPaused)
+        {
+            return;
+        }
+
         HandleMovement();
         HandleLooking();
 
@@ -118,6 +125,11 @@ public class Player : MonoBehaviour
     {
         flashlight.enabled = !flashlight.enabled;
         playerAudioSource.PlayOneShot(flashlightToggleSfx);
+    }
+
+    private void PauseGame(InputAction.CallbackContext context)
+    {
+        PauseManager.Instance.TogglePause();
     }
 
     private bool PerformInteractionRaycast(out RaycastHit hit)

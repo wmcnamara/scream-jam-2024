@@ -47,6 +47,8 @@ public class TheEntity : MonoBehaviour
 
     void Update()
     {
+        audioSource.volume = PauseManager.Instance.IsPaused ? 0.0f : 1.0f;
+
         if (isChasing && !isPausing)
         {
             ChasePlayer();

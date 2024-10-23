@@ -8,6 +8,11 @@ public class MenuGUIFunctionHelper : MonoBehaviour
         SceneManager.LoadScene("Level1");
     }
 
+    public void TogglePause()
+    {
+        PauseManager.Instance.TogglePause();
+    }
+
     public void QuitGame()
     {
         Application.Quit();

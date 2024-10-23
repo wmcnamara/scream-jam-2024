@@ -5,11 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class EscapeToLeave : MonoBehaviour
 {
+    float timeToAllowLeaving = 5.0f;
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        timeToAllowLeaving -= Time.deltaTime;
+        if (timeToAllowLeaving <=0)
         {
-            SceneManager.LoadScene("MainMenu");
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
         }
     }
 }
