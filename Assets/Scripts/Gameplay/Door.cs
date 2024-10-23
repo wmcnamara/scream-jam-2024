@@ -14,6 +14,7 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private AudioClip doorOpenSfx;
     [SerializeField] private AudioClip doorCloseSfx;
     [SerializeField] private AudioClip doorUnlockSfx;
+    [SerializeField] private AudioClip lockBreakSfx;
     [SerializeField] private AudioClip doorLockedInteractSfx;
     [SerializeField] private bool switchOpenDirection;
     [SerializeField] private KeyType keyType;
@@ -75,6 +76,7 @@ public class Door : MonoBehaviour, IInteractable
                     }
                     else 
                     {
+                        doorSource.PlayOneShot(lockBreakSfx, 0.5f);
                         Destroy(threeLocks[i - 1]);
                     }
                 }
